@@ -1,6 +1,5 @@
 name: Bangun APK Tonton
 
-# Jalankan manual: tab Actions > "Bangun APK Tonton" > Run workflow. Hasilnya ada di bagian Artifacts.
 on:
   workflow_dispatch:
   push:
@@ -24,29 +23,19 @@ jobs:
 
       - name: Siapkan Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools platforms;android-34 build-tools;34.0.0
 
-      - name: Pasang komponen SDK yang dibutuhkan
-        run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
-
-      - name: Bangun APK (debug, sudah bertanda tangan debug sehingga bisa dipasang)
+      - name: Beri izin eksekusi gradlew
         working-directory: android
-        run: |
-          chmod +x gradlew
-          ./gradlew --no-daemon --stacktrace assembleDebug
+        run: chmod +x gradlew
 
-      - name: Unggah APK
+      - name: Bangun APK (debug)
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Unggah hasil APK
         uses: actions/upload-artifact@v4
         with:
-          name: Tonton-APK
+          name: tonton-debug-apk
           path: android/app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
-
-      - name: Unggah laporan build bila gagal (untuk diagnosis)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: laporan-build-gagal
-          path: |
-            android/app/build/reports/
-            android/app/build/outputs/logs/
-          if-no-files-found: ignore
