@@ -1,0 +1,90 @@
+#!/bin/sh
+# Menjalankan Tonton di Termux. Dipasang oleh termux/install.sh sebagai perintah "tonton".
+APP_DIR="@APP_DIR@"
+VENV="@VENV@"
+PY="$VENV/bin/python"
+OPEN_BROWSER=1
+
+case "${1:-}" in
+  update)
+    # YouTube sering berubah; yt-dlp menyesuaikan. Jalankan ini bila pencarian atau unduhan mendadak gagal.
+    [ -x "$PY" ] || { echo "Lingkungan Python tidak ditemukan di $VENV. Jalankan lagi termux/install.sh." >&2; exit 1; }
+    echo "Memperbarui yt-dlp..."
+    exec "$PY" -m pip install --upgrade yt-dlp yt-dlp-ejs
+    ;;
+  stop)
+    # Hentikan Tonton yang berjalan (mis. yang dinyalakan aplikasi APK di latar belakang) dan lepas wake lock.
+    pkill -f "$APP_DIR/app.py" 2>/dev/null && echo "Tonton dihentikan." || echo "Tonton tidak sedang berjalan."
+    termux-wake-unlock 2>/dev/null || true
+    exit 0
+    ;;
+  apk-setup)
+    # Mengizinkan aplikasi lain (yang Anda beri izin "Jalankan perintah di Termux") menyalakan Tonton.
+    props="$HOME/.termux/termux.properties"
+    mkdir -p "$HOME/.termux"
+    if grep -Eq '^[[:space:]]*allow-external-apps[[:space:]]*=[[:space:]]*true' "$props" 2>/dev/null; then
+      echo "Sudah aktif: allow-external-apps = true"
+    else
+      printf '\nallow-external-apps = true\n' >> "$props"
+      echo "Ditambahkan ke $props: allow-external-apps = true"
+    fi
+    termux-reload-settings 2>/dev/null || true
+    cat <<'NOTE'
+
+Penting: pengaturan ini mengizinkan aplikasi Android lain menjalankan perintah di Termux,
+tetapi hanya aplikasi yang Anda beri izin "Jalankan perintah di Termux". Beri izin itu
+HANYA kepada aplikasi Tonton. Untuk mencabutnya, hapus baris tadi dari file di atas.
+
+Lalu tutup dan buka lagi Termux, dan buka aplikasi Tonton.
+NOTE
+    exit 0
+    ;;
+  serve) OPEN_BROWSER=0 ;;   # server saja, tanpa membuka browser (dipakai aplikasi APK)
+  help|-h|--help)
+    cat <<'HELP'
+Tonton di Termux
+
+  tonton            jalankan Tonton, lalu buka di browser
+  tonton serve      jalankan server saja, tanpa membuka browser (untuk aplikasi APK)
+  tonton stop       hentikan Tonton yang berjalan di latar belakang
+  tonton update     perbarui yt-dlp (lakukan bila YouTube mendadak gagal)
+  tonton apk-setup  izinkan aplikasi APK Tonton menyalakan server (sekali saja)
+  PORT=5050 tonton  jalankan di port lain
+
+Tekan Ctrl+C di Termux untuk menghentikan Tonton.
+HELP
+    exit 0
+    ;;
+  "") ;;
+  *)
+    echo "Perintah tidak dikenal: $1  (coba: tonton help)" >&2
+    exit 2
+    ;;
+esac
+
+[ -x "$PY" ] || { echo "Lingkungan Python tidak ditemukan di $VENV. Jalankan lagi termux/install.sh." >&2; exit 1; }
+
+PORT="${PORT:-5000}"
+export TONTON_ANDROID=1 HOST=127.0.0.1 PORT
+
+# Cegah Android menidurkan Termux saat layar mati (unduhan tetap jalan).
+termux-wake-lock 2>/dev/null || true
+trap 'termux-wake-unlock 2>/dev/null || true' EXIT
+trap 'exit 130' INT
+trap 'exit 143' HUP TERM
+
+# Buka browser begitu server siap (bukan menebak dengan jeda tetap).
+wait_then_open() {
+  "$PY" -c 'import socket, sys, time
+port = int(sys.argv[1])
+for _ in range(120):
+    try:
+        socket.create_connection(("127.0.0.1", port), 0.5).close()
+        sys.exit(0)
+    except OSError:
+        time.sleep(0.25)
+sys.exit(1)' "$PORT" && termux-open-url "http://127.0.0.1:$PORT"
+}
+[ "$OPEN_BROWSER" = 1 ] && wait_then_open &
+
+"$PY" "$APP_DIR/app.py"

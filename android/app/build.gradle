@@ -1,0 +1,29 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'id.tonton.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'id.tonton.app'
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+// Tanpa dependensi: hanya API Android bawaan (WebView), jadi tidak ada pustaka lain yang perlu diunduh.

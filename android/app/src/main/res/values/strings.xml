@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tonton</string>
+
+    <string name="connecting_title">Menghubungkan ke Tonton…</string>
+    <string name="connecting_body">Memeriksa apakah Tonton sudah berjalan di Termux.</string>
+
+    <string name="starting_title">Menyalakan Tonton…</string>
+    <string name="starting_body">Tonton dinyalakan lewat Termux. Ini bisa memakan beberapa detik.</string>
+
+    <string name="no_termux_title">Termux belum terpasang</string>
+    <string name="no_termux_body">Tonton memakai Termux untuk menjalankan mesinnya (Python, FFmpeg, yt-dlp). Pasang Termux dari F-Droid, lalu ikuti petunjuk Android di README Tonton. Pasang Termux lebih dulu, baru aplikasi ini.</string>
+
+    <string name="permission_title">Izin menyalakan Tonton</string>
+    <string name="permission_body">Agar Tonton bisa dinyalakan otomatis, izinkan aplikasi ini menjalankan perintah di Termux. Atau nyalakan sendiri: buka Termux, ketik  tonton serve  lalu kembali ke sini dan tekan Coba lagi.</string>
+    <string name="permission_denied_body">Izin ditolak, jadi Tonton tidak bisa dinyalakan otomatis. Buka Termux, ketik  tonton serve  lalu kembali ke sini dan tekan Coba lagi. Izin bisa diberikan nanti lewat Info aplikasi, Izin.</string>
+
+    <string name="timeout_title">Tonton belum menyala</string>
+    <string name="timeout_body">Setelah 90 detik Tonton belum menjawab. Kemungkinan penyebab: Tonton belum dipasang di Termux; atau di Termux belum dijalankan  tonton apk-setup  (lalu tutup dan buka lagi Termux). Cara manual: buka Termux, ketik  tonton serve  lalu tekan Coba lagi.</string>
+
+    <string name="btn_retry">Coba lagi</string>
+    <string name="btn_open_termux">Buka Termux</string>
+    <string name="btn_grant">Beri izin</string>
+    <string name="btn_fdroid">Buka halaman Termux di F-Droid</string>
+</resources>

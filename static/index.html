@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tonton</title>
+  <meta name="theme-color" content="#101319">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ffb224'/%3E%3Cpath d='M12 9l12 7-12 7z' fill='%231c1300'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" id="brand" href="/" aria-label="Tonton, ke beranda">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+        <path d="M12 9l12 7-12 7z" fill="var(--accent-ink)"/>
+      </svg>
+      <span>Tonton</span>
+    </a>
+
+    <div class="search-wrap">
+      <form id="search" class="search" role="search" autocomplete="off">
+        <input id="q" type="search" placeholder="Cari video, nama orang, atau tempel tautan" autocomplete="off"
+               role="combobox" aria-expanded="false" aria-controls="suggest" aria-autocomplete="list"
+               aria-label="Cari video, nama orang, atau tempel tautan">
+        <button type="submit">Cari</button>
+      </form>
+      <ul id="suggest" class="suggest-list" role="listbox" aria-label="Saran pencarian" hidden></ul>
+    </div>
+
+    <button id="open-dl" class="dl-btn" type="button">
+      Unduhan <span id="dl-badge" class="badge" hidden>0</span>
+    </button>
+  </header>
+
+  <div id="banner" class="banner" role="alert" hidden></div>
+  <main id="view"></main>
+
+  <dialog id="downloads" aria-labelledby="dl-title">
+    <div class="dlg-head">
+      <h2 id="dl-title">Unduhan</h2>
+      <button id="close-dl" class="ghost" type="button">Tutup</button>
+    </div>
+    <div id="downloads-list"></div>
+  </dialog>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

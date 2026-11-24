@@ -1,0 +1,4 @@
+// Android Gradle Plugin 8.5.x butuh Gradle 8.7+ (dipakai: 8.9, lihat gradle/wrapper) dan JDK 17.
+plugins {
+    id 'com.android.application' version '8.5.2' apply false
+}
